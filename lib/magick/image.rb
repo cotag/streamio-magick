@@ -30,9 +30,10 @@ class Magick::Image
   end
   
   def transcode(output_file, parameters = "")
-    err = Open3.popen3("convert #{Shellwords.escape(path)} #{parameters} #{Shellwords.escape(output_file)}") { |stdin, stdout, stderr| stderr.read }
+    cmd = "convert #{Shellwords.escape(path)} #{parameters} #{Shellwords.escape(output_file)}"
+    err = Open3.popen3(cmd) { |stdin, stdout, stderr| stderr.read }
     
-    raise Magick::Error, err if err.length > 0
+    raise Magick::Error, "#{err} for command: #{cmd}" if err.length > 0
     
     self.class.new(output_file)
   end
